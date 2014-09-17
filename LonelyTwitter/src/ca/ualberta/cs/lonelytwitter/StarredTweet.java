@@ -1,33 +1,22 @@
 package ca.ualberta.cs.lonelytwitter;
+
 import java.util.Date;
 
 
-public class StarredTweet extends AbstractTweet {
-
-	@Override
-	public Date getTweetDate() {
-		// TODO Auto-generated method stub
-		return null;
+public class StarredTweet extends AbstractTweet
+{
+	public StarredTweet(Date tweetDate, String tweetBody) {
+		super();
+		this.tweetDate = tweetDate;
+		this.tweetBody = tweetBody;
 	}
 
-	@Override
-	public void setTweetDate(Date tweetDate) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public String getTweetBody() {
-		// TODO Auto-generated method stub
-		return null;
+		return "\u2605" + tweetBody;
 	}
 
-	@Override
-	public void setTweetBody(String tweetBody) {
-		// TODO Auto-generated method stub
-		
+	public String toString() {
+		return getTweetBody();
 	}
-	
-	
 
 }

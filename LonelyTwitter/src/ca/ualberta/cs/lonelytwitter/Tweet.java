@@ -8,27 +8,22 @@ import java.util.Date;
 
 
 public class Tweet extends AbstractTweet implements Serializable {
-	private Date tweetDate;
-	private String tweetBody;
 
 
-	public Date getTweetDate() {
-		return tweetDate;
-	}
 
-	public void setTweetDate(Date tweetDate) {
+	public Tweet(Date tweetDate, String tweetBody) {
+		super();
 		this.tweetDate = tweetDate;
+		this.tweetBody = tweetBody;
 	}
+
 
 	public String getTweetBody() {
 		return tweetBody;
 	}
 
-	public void setTweetBody(String tweetBody) {
-		this.tweetBody = tweetBody;
-	}
 
 	public String toString() {
-		return tweetBody;
+		return tweetDate + " / " + tweetBody;
 	}
 }

@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import ca.ualberta.cs.lonelytwitter.data.DataFileManager;
+import ca.ualberta.cs.lonelytwitter.data.IDataManager;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -22,13 +23,15 @@ import android.widget.ListView;
 
 public class LonelyTwitterActivity extends Activity {
 
-	private DataFileManager dataManager;
+	private IDataManager dataManager;
+	
+	private static final String FILENAME = "file.sav";
 	
 	private EditText bodyText;
 	
-	private ArrayList<Tweet> tweets;
+	private ArrayList<AbstractTweet> tweets;
 	
-	private ArrayAdapter<Tweet> tweetsViewAdapter;
+	private ArrayAdapter<AbstractTweet> tweetsViewAdapter;
 	
 	private ListView oldTweetsList;
 
@@ -46,25 +49,33 @@ public class LonelyTwitterActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		
 		dataManager = new DataFileManager();
-		//tweets = loadTweets();
+		
 		tweets = dataManager.loadTweets();
-		tweetsViewAdapter = new ArrayAdapter<Tweet>(this, R.layout.list_item, tweets);
+		
+		tweetsViewAdapter = new ArrayAdapter<AbstractTweet>(this, R.layout.list_item, tweets);
 		oldTweetsList.setAdapter(tweetsViewAdapter);
 	}
 	
 	public void save(View v) {
 		
 		String text = bodyText.getText().toString();
+		if (text.contains("*")){
+			StarredTweet starred = new StarredTweet(new Date(),text);
+			tweets.add(starred);
+		}
+		else{
+			Tweet tweet =new Tweet(new Date(), text);
+			tweets.add(tweet);
+		}
 		Tweet tweet = new Tweet(new Date(), text);
 		
-		
-		//tweets.add(tweet);
-		dataManager.saveTweets(tweets);
+		tweets.add(tweet);
 		tweetsViewAdapter.notifyDataSetChanged();
 		
 		bodyText.setText("");
-		
+		dataManager.saveTweets(tweets);
 	}
 	
 	public void clear(View v) {
@@ -72,9 +83,34 @@ public class LonelyTwitterActivity extends Activity {
 		tweets.clear();
 		tweetsViewAdapter.notifyDataSetChanged();
 		dataManager.saveTweets(tweets);
-		
 	}
 	
+	public ArrayList<Tweet> loadTweets() {
+		ArrayList<Tweet> lts = new ArrayList<Tweet>();
+
+		try {
+			FileInputStream fis = new FileInputStream(FILENAME);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+
+			lts = (ArrayList<Tweet>) ois.readObject();
+
+		} catch (Exception e) {
+			Log.i("LonelyTwitter", "Error casting");
+			e.printStackTrace();
+		} 
+
+		return lts;
+	}
 	
-	
+	public void saveTweets(List<Tweet> lts) {
+		try {
+			FileOutputStream fos = new FileOutputStream(FILENAME);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(lts);
+			fos.close();
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
