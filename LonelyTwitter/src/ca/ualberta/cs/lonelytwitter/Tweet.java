@@ -7,16 +7,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 
-public class Tweet implements Serializable {
+public class Tweet extends AbstractTweet implements Serializable {
 	private Date tweetDate;
 	private String tweetBody;
 
-
-	public Tweet(Date tweetDate, String tweetBody) {
-		super();
-		this.tweetDate = tweetDate;
-		this.tweetBody = tweetBody;
-	}
 
 	public Date getTweetDate() {
 		return tweetDate;
